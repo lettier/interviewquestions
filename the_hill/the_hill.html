@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel='stylesheet' href='style.css'/>
+		<!-- David Lettier (C) 2014. http://www.lettier.com/ -->
+		<style>
+
+			body {
+				font-family: monospace;
+				font-size: 16px;
+			}
+			
+			span {
+				width: 270px;
+				display: block;
+				font-family: monospace;
+				margin-bottom: 20px;
+				text-align: left;
+			}
+			
+			#array {
+				border: none;
+				width: 130px;
+				padding: 5px;
+				font-size: 20px;
+				border-radius: 5px;
+				background-color: #ddd;
+				margin-bottom: 7px;
+			}
+			
+			#run {
+				font-family: monospace;
+				font-size: 20px;
+				background-color: rgb(150,180,210);
+				color: #fff;
+				border: 0px solid black;
+				border-radius: 5px;
+			}
+			
+			#run:hover {
+				background-color: rgb(100,180,140);
+				color: #fff;
+				border: 0px solid black;
+				border-radius: 5px;
+			}
+			
+			#result {
+				width: 196px;
+				text-align: center;
+				color: #fff;
+				font-family: monospace;
+				border-radius: 5px;
+				background-color: rgb(100,180,210);
+				padding: 5px;
+				visibility: hidden;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<h1>The Hill</h1>
+		<span>
+			Given an array of integers, what is the minimum <strong>X</strong> in the range [0,<strong>X</strong>] such that subtracting or adding [0,<strong>X</strong>] 
+			from each element in the array (from left to right) will produce a <em>strictly</em> monotonically increasing sequence? <br><br>For example, the minimum 
+			<strong>X</strong> for [5,4,3,2,8] is 3, producing: <br> [5-3,4-1,3+1,2+3,8-2]=<br>[  &nbsp;2, &nbsp;3, &nbsp;4, &nbsp;5, &nbsp;6].
+		</span>
+		<input id="array" type="text" width="100" value="5,4,3,2,8" title="Input an array separated by commas.">
+		<button id="run">Run!</button>
+		<div id="result">
+		</div>
+		<script>
+
+			function calculate( ) {
+			
+				var a = document.getElementById( "array" ).value;
+				a     = a.split( "," );
+				
+				var i = a.length;
+				
+				while( i-- ) 
+				{
+					a[ i ] = parseInt( a[ i ], 10 );
+					
+					if ( isNaN( a[ i ] ) ) 
+					{
+						
+						a.splice( i, 1 );
+						
+					}
+					
+				}
+
+				var result = document.getElementById( "result" );
+
+				function s( a, b ) {
+				
+					return a - b;
+					
+				}
+
+				var b = a.slice( );
+
+				// Edge cases.
+
+				if ( a.length == 1 ) 
+				{
+					
+					result.style.visibility = "visible";
+					result.innerHTML = "Min <strong>X</strong>=0<br>[" + a + "]";
+					return true;
+					
+				}
+				else if ( b.sort( s ).toString( ) === a.toString( ) ) 
+				{
+					// The input array is already monotonic.
+					// But is it strictly?
+					var c = b.filter( function( elem, pos ) {
+					
+						// IndexOf returns the index of the first occurrence.
+						// If there is a duplicate, then eventually indexOf != pos.
+						// So indexOf( elem ) == pos will return false and thus
+						// the duplicate will not make it into the c array
+						// making the length of c shorter than b.
+						
+						return b.indexOf( elem ) == pos;
+						
+					}); 
+					
+					if ( c.length != b.length ) 
+					{
+						// Do nothing as it is not strictly monotonic.
+					}
+					else {
+						
+						result.style.visibility = "visible";
+						result.innerHTML = "Min <strong>X</strong>=0<br>[" + a + "]";
+						return true;
+						
+					}
+				}
+
+				var max_int = 2000000000000000;
+				var left = 0;
+				var right = max_int;
+				var mid = Math.floor( ( right - left ) / 2 );
+				var min = -1;
+				var not_found = true;
+				var needs = [ ];
+				var seq = [ ];
+
+				while ( not_found === true ) 
+				{
+				
+					var pass = true;
+					var last = a[ 0 ] - mid;
+					needs    = [ ];
+					needs.push( last );
+					
+					for ( i = 1; i < a.length; ++i ) 
+					{
+						needed = last + 1;
+						
+						// Scenarios:
+						// n *---------*
+						//   *----n----*   
+						//   *---------* n Fail case.
+						
+						if ( needed > ( a[i] + mid ) ) 
+						{
+						
+							pass = false;
+							break;
+							
+						}
+						else if ( ( a[i] - mid ) >= needed ) 
+						{
+							last = ( a[i] - mid );
+							needs.push( last );
+							continue;
+						}
+						else if ( needed >=( a[i] - mid ) && needed <= ( a[i] + mid ) ) 
+						{
+							
+							last = needed;
+							needs.push( last );
+							continue;
+							
+						}
+						
+					}
+					
+					if ( pass === true ) 
+					{
+						
+						// This mid was enough so save the it as the current min and the seq.
+						
+						right = mid;
+						min   = mid;
+						seq   = needs;
+						
+						if ( right - left == 1 )
+						{
+							
+							// The binary search is complete.
+							
+							not_found = false;
+							
+							break;
+							
+						}
+						
+						mid   = Math.floor( ( right - left ) / 2 );
+						
+					}
+					else if ( pass === false ) 
+					{
+						
+						left = mid;
+						
+						if ( right - left == 1 ) 
+						{
+							not_found = false;
+							
+							break;
+						}
+						
+						mid  = Math.floor( ( right - left ) / 2 ) + left;
+						
+					}
+				
+				}
+
+				result.style.visibility = "visible";
+				result.innerHTML = "Min <strong>X</strong>=" + min + "<br>[" + seq + "]";
+
+			}
+
+			document.getElementById( "run" ).onclick = calculate;
+
+		</script>
+	</body>
+</html>
