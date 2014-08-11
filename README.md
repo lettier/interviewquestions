@@ -1,7 +1,7 @@
 
 # Interview Questions
 
-A collection of solutions to various technical interview questions.  
+A collection of solutions to various technical interview questions.
 
-(C) 2014 David Lettier.  
+(C) 2016 David Lettier.  
 http://www.lettier.com/

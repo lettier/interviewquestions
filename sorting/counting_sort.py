@@ -9,8 +9,11 @@ http://www.lettier.com/
 '''
 
 import random;
+import copy;
 
 a = [ random.randint( 0, 23 ) for i in range( 0, 23 ) ];
+
+b = copy.copy( a );
 
 print( a, "\n" );
 
@@ -63,7 +66,7 @@ for i in range( len( a ) - 1, -1, -1 ):
 	# is the key to the output array.
 	
 	# Say a[ i ] is 3 and was seen only one time.
-	# Its prefix sum is counts[ 0 ] + counts[ 1 ] + counts[ 2 ] + counts[ 3 ] = 4
+	# Its prefix sum is counts[ 0 ] + counts[ 1 ] + counts[ 2 ] + counts[ 3 ] = 4.
 	# So counts[ 3 ] = 3 since we subtracted one.
 	# We know that three numbers come before 3 (4-1=3).
 	# Maybe 0,0,0 or 1,1,1 or 2,2,2 or 0,1,1 or 0,1,2 ... 
@@ -77,7 +80,7 @@ for i in range( len( a ) - 1, -1, -1 ):
 		
 	output[ counts[ a[ i ] ] ] = a[ i ];
 	
-print( "Python sorted:   ", sorted( a ) );
+print( "Python sorted:   ", sorted( b ) );
 	
 print( "Counting sorted: ", output );
 	

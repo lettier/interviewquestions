@@ -262,7 +262,7 @@ class Double_Linked_List( Linked_List ):
 	def __reverse( self, link ):
 		
 		# Follow the links.
-		# When you reach the head,
+		# When you reach the end,
 		# this is the new head.
 		# Return this link.
 		# Set the current link, in the stack, previous

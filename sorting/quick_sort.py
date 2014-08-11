@@ -98,19 +98,19 @@ def partition( a, l, r ):
 
 def quick_sort( a, l, r ):
 	
-	# If left if >= right, do nothing.
+	# If left is >= right, do nothing.
 	
 	if ( l < r ):
 		
 		# Partition the array such that all values
-		# < pivot value are to to the left of the pivot
+		# < pivot value are to the left of the pivot
 		# and all values > pivot value are to the right
 		# of the pivot value.
 		# Get the pivot index.
 	
 		pivot_index = partition( a, l, r );
 		
-		print( a[ : l ], a[ pivot_index ], a[ pivot_index + 2 : r ] );
+		print( a[ l : pivot_index ], a[ pivot_index ], a[ pivot_index + 1 : r + 1 ] );
 		
 		quick_sort( a, l, pivot_index - 1 );
 		quick_sort( a, pivot_index + 1, r );
